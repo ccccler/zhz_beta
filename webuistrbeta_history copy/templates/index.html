@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="zh">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>我的个人网页</title>
+    <link rel="stylesheet" href="/static/css/styles.css">
+</head>
+
+<body>
+    <div class="container">
+        <!-- 左侧个人信息 -->
+        <div class="profile-section">
+            <div class="profile-card">
+                <img src="/static/assets/bot-avatar.jpg" alt="张洪忠教授头像" class="avatar">
+                <h1>张洪忠</h1>
+                <p class="title">北京师范大学新闻传播学院教授</p>
+                <p class="subtitle">北师大新媒体传播研究中心主任</p>
+                <!-- <p class="education">传播学博士</p> -->
+
+                <!-- <div class="section">
+                    <h2>联系方式</h2>
+                    <div class="contact-info">
+                        <a href="mailto:zhanghz9@126.com" class="email-link">
+                            📧 zhanghz9@126.com
+                        </a>
+                    </div>
+                </div> -->
+
+                <div class="section">
+                    <h2>研究方向</h2>
+                    <p class="research-interests">
+                        传播效果测量、智能传播、传媒公信力等，尤其关注社交机器人、深度伪造等人工智能技术在网络空间应用对社会关系网络、舆论、群体行为等的影响。
+                    </p>
+                </div>
+
+                <div class="section">
+                    <h2>可以向我提问 
+                        <button id="refreshPrompts" class="refresh-button"></button>
+                    </h2>
+                    <div class="prompt-cards" id="promptCards">
+                        <!-- 卡片将通过JavaScript动态添加 -->
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 右侧对话区域 -->
+        <div class="chat-section">
+            <div class="chat-container">
+                <div class="chat-header">
+                    <div class="chat-tabs">
+                        <button class="tab-button active" data-tab="chat">知识库提问</button>
+                        <button class="tab-button" data-tab="case-analysis">案例分析(BETA)</button>
+                    </div>
+                </div>
+
+                <!-- 聊天消息区域 -->
+                <div class="chat-content active" id="chatMessages">
+                    <!-- 原有的聊天消息内容 -->
+                </div>
+
+                <!-- 案例分析区域 -->
+                <div class="chat-content" id="caseAnalysis">
+                    <!-- 这里将显示案例分析的内容 -->
+                </div>
+
+                <div class="chat-input">
+                    <textarea id="messageInput" placeholder="提示关键词：大模型、社交机器人、机器行为范式、元宇宙……"></textarea>
+                    <button id="sendButton">发送</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="/static/script.js"></script>
+    <script>
+    function refreshPromptCards() {
+        fetch('/get_random_questions')
+            .then(response => response.json())
+            .then(questions => {
+                const promptCards = document.getElementById('promptCards');
+                promptCards.innerHTML = ''; // 清空现有卡片
+                
+                questions.forEach(question => {
+                    const card = document.createElement('div');
+                    card.className = 'prompt-card';
+                    card.textContent = question;
+                    card.addEventListener('click', function() {
+                        messageInput.value = this.textContent.trim();
+                        messageInput.focus();
+                    });
+                    promptCards.appendChild(card);
+                });
+            });
+    }
+
+    // 页面加载时刷新一次
+    document.addEventListener('DOMContentLoaded', refreshPromptCards);
+    </script>
+</body>
+
+</html>
